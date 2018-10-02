@@ -5,8 +5,9 @@ import numpy as np
 from torchvision import transforms
 
 class dataset(torch.utils.data.Dataset):
-    def __init__(self,dirpath):
+    def __init__(self,dirpath,transforms):
         #this dirpath will have subfolders: images, labels
+        self.transforms=transforms
         self.imagespath=os.path.join(dirpath,'images')
         self.labelspath=os.path.join(dirpath,'labels')
         self.images=os.listdir(self.imagespath)
@@ -36,7 +37,8 @@ class dataset(torch.utils.data.Dataset):
         image=np.rollaxis(image,2,0)
         # image=torch.from_numpy(image).float().cuda()
         # label=torch.from_numpy(label).float().cuda()
-
+        image = self.transforms(image)
+        label=self.transforms(label)
         #image=torch.tensor(image,dtype=torch.cuda.float)
         #label = torch.tensor(label,dtype=torch.cuda.float)
         return image,label

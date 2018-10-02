@@ -38,10 +38,10 @@ class FCN8(nn.Module):
         self.fconv7=Conv2dSame(4096,4096,1)
         self.score_fr=Conv2dSame(4096,no_of_classes,1)
 
-        self.conv7_to_pool4=nn.ConvTranspose2d(no_of_classes, no_of_classes, (6,6), stride=(6,6), bias=False)
+        self.conv7_to_pool4=nn.ConvTranspose2d(no_of_classes, no_of_classes, (2,2), stride=(2,2), bias=False)
         self.pool4_1=Conv2dSame(512,no_of_classes,1,1)
 
-        self.pool4_to_pool3 = nn.ConvTranspose2d(no_of_classes, no_of_classes, (3, 3), stride=(2, 2), bias=False)
+        self.pool4_to_pool3 = nn.ConvTranspose2d(no_of_classes, no_of_classes, (2, 2), stride=(2, 2), bias=False)
         self.pool3_1 = Conv2dSame(256, no_of_classes, 1, 1)
 
         self.upsample_to_original=nn.ConvTranspose2d(no_of_classes,no_of_classes,(8,8),stride=(8,8),bias=False)

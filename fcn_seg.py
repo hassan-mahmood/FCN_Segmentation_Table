@@ -8,6 +8,7 @@ from FCN8.FCN8 import *
 import torch.optim as optim
 import argparse
 from tqdm import tqdm
+import torchvision
 
 parser=argparse.ArgumentParser()
 parser.add_argument('--datadir',default="dataset/",help="Default directory which contains images and labels")
@@ -37,8 +38,9 @@ def cross_entropy2d(input, target, weight=None, size_average=True):
 if __name__=="__main__":
 
     args = parser.parse_args()
+    mytransforms = torchvision.transforms.Compose([transforms.ToTensor(), transforms.Resize((1024, 1024))])
 
-    map_dataset=dataset(args.datadir)
+    map_dataset=dataset(args.datadir,mytransforms)
 
     dataloader=DataLoader(map_dataset,batch_size=1,shuffle=True,num_workers=2)
 
