@@ -2,13 +2,16 @@ import torch
 import os
 import cv2
 import numpy as np
+from torchvision import transforms
 
 class dataset(torch.utils.data.Dataset):
     def __init__(self,dirpath):
         #this dirpath will have subfolders: images, labels
-        self.dirpath=dirpath
-        self.images=os.listdir(os.path.join(dirpath,'images'))
-        self.labels=os.listdir(os.path.join(dirpath,'labels'))
+        self.imagespath=os.path.join(dirpath,'images')
+        self.labelspath=os.path.join(dirpath,'labels')
+        self.images=os.listdir(self.imagespath)
+        self.labels=os.listdir(self.labelspath)
+
 
 
     def __len__(self):
@@ -26,8 +29,13 @@ class dataset(torch.utils.data.Dataset):
 
 
     def __getitem__(self, idx):
-        image=cv2.imread(os.path.join(self.dirpath,self.images[idx]))
-        label=self.convert_to_label(os.path.join(self.dirpath,self.labels[idx]))
+        image=cv2.imread(os.path.join(self.imagespath,self.images[idx]))
+        label=self.convert_to_label(os.path.join(self.labelspath,self.labels[idx]))
+        #image=torch.tensor(image)
+        #following rollaxis will convert r g b c to c r g b
+        image=np.rollaxis(image,2,0)
+        image=torch.tensor(image).type('torch.FloatTensor')
+        label = torch.tensor(label).type('torch.FloatTensor')
         return image,label
 
 
