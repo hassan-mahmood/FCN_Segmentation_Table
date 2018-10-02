@@ -46,7 +46,7 @@ def cross_entropy2d(input, target):
 if __name__=="__main__":
 
     args = parser.parse_args()
-    mytransforms = torchvision.transforms.Compose([torchvision.transforms.Resize((224, 224)), torchvision.transforms.ToTensor()])
+    mytransforms = torchvision.transforms.Compose([torchvision.transforms.Resize((1024, 1024)), torchvision.transforms.ToTensor()])
 
     map_dataset=dataset(args.datadir,mytransforms)
 
@@ -55,7 +55,7 @@ if __name__=="__main__":
     #we are just considering buildings and background so 2 classes
     no_of_classes=2
     net=FCN8(no_of_classes)
-    #net.cuda()
+    net.cuda()
 
     optimizer=optim.SGD(net.parameters(),lr=0.01,momentum=0.9)
     criterion = nn.BCELoss()
@@ -81,8 +81,8 @@ if __name__=="__main__":
             loss.backward()
             running_loss+=loss.item()
             optimizer.step()
-        break
+
         print("epoch {}, loss: {}".format(epoch, running_loss/33.0))
-        torch.save(net,str(epoch)+'.pt')
+        torch.save(net,os.path.join('weights',str(epoch)+'.pt'))
 
 
