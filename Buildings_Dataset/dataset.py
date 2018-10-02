@@ -34,8 +34,8 @@ class dataset(torch.utils.data.Dataset):
         #image=torch.tensor(image)
         #following rollaxis will convert r g b c to c r g b
         image=np.rollaxis(image,2,0)
-        image=torch.tensor(image).type('torch.cuda.FloatTensor')
-        label = torch.tensor(label).type('torch.cuda.FloatTensor')
+        image=torch.tensor(image,dtype=torch.cuda.float)
+        label = torch.tensor(label,dtype=torch.cuda.float)
         return image,label
 
 
