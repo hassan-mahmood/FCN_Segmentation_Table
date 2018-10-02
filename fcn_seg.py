@@ -38,12 +38,13 @@ if __name__=="__main__":
     args = parser.parse_args()
 
     map_dataset=dataset(args.datadir)
-    
+
     dataloader=DataLoader(map_dataset,batch_size=1,shuffle=True,num_workers=2)
 
     #we are just considering buildings and background so 2 classes
     no_of_classes=2
     net=FCN8(no_of_classes)
+    net.cuda()
 
     optimizer=optim.SGD(net.parameters(),lr=0.01,momentum=0.9)
 
