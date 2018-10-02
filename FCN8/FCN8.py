@@ -57,11 +57,9 @@ class FCN8(nn.Module):
         out=pool4_upsampled+pool3_1
 
         out=self.upsample_to_original(out)
-        print('Final output shape:',out.shape)
+        #print('Final output shape:',out.shape)
+        return out
 
-
-
-        pass
 
 
 

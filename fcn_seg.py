@@ -27,7 +27,7 @@ def cross_entropy2d(input, target, weight=None, size_average=True):
 
 
 map_dataset=dataset('dataset')
-dataloader=DataLoader(map_dataset,batch_size=4,shuffle=True,num_workers=2)
+dataloader=DataLoader(map_dataset,batch_size=1,shuffle=True,num_workers=2)
 
 #we are just considering buildings and background so 2 classes
 no_of_classes=2
@@ -39,6 +39,8 @@ epochs=100
 
 for epoch in epochs:
     running_loss=0.0
+    #setting net/model to training mode
+    net.train()
     for i_batch,batch in enumerate(dataloader):
         image,label=batch
 
@@ -47,6 +49,10 @@ for epoch in epochs:
 
         loss=cross_entropy2d(output,label)
         loss.backward()
-        print("iter {}, loss {}".format(iter, loss.data[0]))
+        running_loss+=loss.item()
+        if(i_batch%100==99):
+            print("epoch {}, iter {}, loss: {}".format(epoch, i_batch, running_loss/100.0))
+
         optimizer.step()
+
 
