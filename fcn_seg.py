@@ -62,8 +62,11 @@ def iou(pred, target,no_of_classes):
 if __name__=="__main__":
 
     args = parser.parse_args()
+    starting_epoch = 0
     if(not os.path.exists('weights')):
         os.mkdir('weights')
+    else:
+        starting_epoch=len(os.listdir('weights'))+1
 
     mytransforms = torchvision.transforms.Compose([torchvision.transforms.Resize((1024, 1024)), torchvision.transforms.ToTensor()])
 
@@ -76,6 +79,7 @@ if __name__=="__main__":
     #we are just considering buildings and background so 2 classes
     no_of_classes=int(args.classes)
     net=FCN8(no_of_classes)
+
     if(args.checkpoint!="None"):
         net=torch.load(args.checkpoint)
     net.cuda()
@@ -85,7 +89,7 @@ if __name__=="__main__":
     softmax=nn.Softmax()
     epochs=int(args.epochs)
     print('Starting training')
-    for epoch in range(epochs):
+    for epoch in range(starting_epoch,epochs):
         running_loss=0.0
         iteration_size=0
         #setting net/model to training mode
