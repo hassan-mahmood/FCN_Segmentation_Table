@@ -62,6 +62,8 @@ def iou(pred, target,no_of_classes):
 if __name__=="__main__":
 
     args = parser.parse_args()
+    if(not os.path.exists('weights')):
+        os.mkdir('weights')
 
     mytransforms = torchvision.transforms.Compose([torchvision.transforms.Resize((1024, 1024)), torchvision.transforms.ToTensor()])
 
