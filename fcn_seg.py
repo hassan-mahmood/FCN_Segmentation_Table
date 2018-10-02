@@ -56,6 +56,8 @@ if __name__=="__main__":
         net.train()
         for i_batch,batch in tqdm(enumerate(dataloader)):
             image,label=batch
+            image.cuda()
+            label.cuda()
 
             optimizer.zero_grad()
             output=net(image)

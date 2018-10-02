@@ -36,8 +36,6 @@ class dataset(torch.utils.data.Dataset):
         image=np.rollaxis(image,2,0)
         image=torch.tensor(image).type('torch.FloatTensor')
         label = torch.tensor(label).type('torch.FloatTensor')
-        image.cuda()
-        label.cuda()
         return image,label
 
 
