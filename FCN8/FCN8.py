@@ -56,15 +56,9 @@ class FCN8(nn.Module):
         out = self.pool5(out_pool4)
         #above out is output from vgg
 
-        print('pool 5 shape:',out.shape)
-
         out=self.dropout(self.relu(self.fconv6(out)))
-        print('Pool 6 shape:',out.shape)
         out=self.dropout(self.relu(self.fconv7(out)))
-        print('Pool 7 shape:',out.shape)
         out=self.score_fr(out)
-        print('Pool 7 fr shape:',out.shape)
-
 
         conv7_upsampled=self.conv7_to_pool4(out)
         pool4_1=self.pool4_1(out_pool4)

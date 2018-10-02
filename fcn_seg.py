@@ -9,6 +9,7 @@ import torch.optim as optim
 import argparse
 from tqdm import tqdm
 import torchvision
+import torch.functional as F
 
 parser=argparse.ArgumentParser()
 parser.add_argument('--datadir',default="dataset/",help="Default directory which contains images and labels")
@@ -16,21 +17,28 @@ parser.add_argument('--datadir',default="dataset/",help="Default directory which
 
 
 #ref: https://github.com/wkentaro/pytorch-fcn/blob/master/torchfcn/trainer.py
-def cross_entropy2d(input, target, weight=None, size_average=True):
+def cross_entropy2d(input, target):
+
+    log_softmax=nn.LogSoftmax()
+    nll_loss=nn.NLLLoss()
     # input: (n, c, h, w), target: (n, h, w)
     n, c, h, w = input.size()
     # log_p: (n, c, h, w)
-    log_p = F.log_softmax(input, dim=1)
+
+    log_p = log_softmax(input)
     # log_p: (n*h*w, c)
     log_p = log_p.transpose(1, 2).transpose(2, 3).contiguous()
     log_p = log_p[target.view(n, h, w, 1).repeat(1, 1, 1, c) >= 0]
     log_p = log_p.view(-1, c)
+
     # target: (n*h*w,)
     mask = target >= 0
     target = target[mask]
-    loss = F.nll_loss(log_p, target, weight=weight, size_average=False)
-    if size_average:
-        loss /= mask.data.sum()
+    target=target.type(torch.cuda.LongTensor)
+    loss = nll_loss(log_p, target)
+    loss=loss.type(torch.cuda.FloatTensor)
+    # if size_average:
+    #     loss = loss.item()/torch.sum(mask).item()
     return loss
 
 
@@ -38,7 +46,7 @@ def cross_entropy2d(input, target, weight=None, size_average=True):
 if __name__=="__main__":
 
     args = parser.parse_args()
-    mytransforms = torchvision.transforms.Compose([transforms.ToTensor(), transforms.Resize((1024, 1024))])
+    mytransforms = torchvision.transforms.Compose([torchvision.transforms.Resize((224, 224)), torchvision.transforms.ToTensor()])
 
     map_dataset=dataset(args.datadir,mytransforms)
 
@@ -47,10 +55,11 @@ if __name__=="__main__":
     #we are just considering buildings and background so 2 classes
     no_of_classes=2
     net=FCN8(no_of_classes)
-    net.cuda()
+    #net.cuda()
 
     optimizer=optim.SGD(net.parameters(),lr=0.01,momentum=0.9)
-
+    criterion = nn.BCELoss()
+    softmax=nn.Softmax()
     epochs=100
     print('Starting training')
     for epoch in range(epochs):
@@ -67,10 +76,12 @@ if __name__=="__main__":
 
             optimizer.zero_grad()
             output=net(image)
+
             loss=cross_entropy2d(output,label)
             loss.backward()
             running_loss+=loss.item()
             optimizer.step()
+        break
         print("epoch {}, loss: {}".format(epoch, running_loss/33.0))
         torch.save(net,str(epoch)+'.pt')
 
