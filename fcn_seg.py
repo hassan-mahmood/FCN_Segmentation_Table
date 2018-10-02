@@ -107,29 +107,4 @@ if __name__=="__main__":
 
         print("epoch {}, loss: {}".format(epoch, running_loss/iteration_size))
         torch.save(net,os.path.join('weights',str(epoch)+'.pt'))
-        #now the model is evaluated on unseen data
-        net.eval()
-        iteration_size=0
-        running_loss=0.0
-        for i_batch, batch in tqdm(enumerate(test_dataloader)):
-            image, label = batch
-
-            image.cuda()
-            label.cuda()
-            image = image.type(torch.cuda.FloatTensor)
-            label = label.type(torch.cuda.FloatTensor)
-
-            optimizer.zero_grad()
-            output = net(image)
-
-            loss = cross_entropy2d(output, label)
-            loss.backward()
-            running_loss += loss.item()
-            optimizer.step()
-            iteration_size += 1
-            print(iou(output,label,no_of_classes))
-
-        print("epoch {}, loss: {}".format(epoch, running_loss / iteration_size))
-        torch.save(net, os.path.join('weights', str(epoch) + '.pt'))
-
 
