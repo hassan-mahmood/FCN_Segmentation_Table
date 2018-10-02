@@ -35,6 +35,7 @@ def cross_entropy2d(input, target, weight=None, size_average=True):
 
 
 if __name__=="__main__":
+
     args = parser.parse_args()
 
     map_dataset=dataset(args.datadir)
@@ -56,8 +57,11 @@ if __name__=="__main__":
         net.train()
         for i_batch,batch in tqdm(enumerate(dataloader)):
             image,label=batch
+
             image.cuda()
             label.cuda()
+            image = image.type(torch.cuda.FloatTensor)
+            label=label.type(torch.cuda.FloatTensor)
 
             optimizer.zero_grad()
             output=net(image)
