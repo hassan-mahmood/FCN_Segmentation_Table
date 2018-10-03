@@ -12,8 +12,8 @@ import torchvision
 import torch.functional as F
 
 parser=argparse.ArgumentParser()
-parser.add_argument('--traindir',default="dataset/train/",help="Default directory which contains images and labels for training")
-parser.add_argument('--testdir',default="dataset/eval/",help="Default directory which contains images and labels for evaluation")
+parser.add_argument('--traindir',default="dataset/",help="Default directory which contains images and labels for training")
+parser.add_argument('--testdir',default="dataset/",help="Default directory which contains images and labels for evaluation")
 parser.add_argument('--checkpoint',default='None',help="If you want to load the model from a checkpoint")
 parser.add_argument('--lr',default="0.0001",help="learning rate to update the parameters")
 parser.add_argument('--epochs',default="100",help="number of epochs to train the model to.")
@@ -82,7 +82,7 @@ if __name__=="__main__":
 
     if(args.checkpoint!="None"):
         net=torch.load(args.checkpoint)
-    net.cuda()
+    #net.cuda()
 
     optimizer=optim.SGD(net.parameters(),lr=float(args.lr),momentum=0.9)
     criterion = nn.BCELoss()
@@ -106,6 +106,8 @@ if __name__=="__main__":
             output=net(image)
 
             loss=cross_entropy2d(output,label)
+            print('Loss value:',loss.item())
+
             loss.backward()
             running_loss+=loss.item()
             optimizer.step()
