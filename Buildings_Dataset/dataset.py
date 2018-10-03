@@ -23,20 +23,20 @@ class dataset(torch.utils.data.Dataset):
         image=cv2.cvtColor(image,cv2.COLOR_BGR2RGB)
         return Image.fromarray(image)
 
-    def convert_to_label(self,imgpath):
-        im=cv2.imread(imgpath)
-
-        h,w,d=im.shape
-        label=np.zeros((h,w))
-        #because it is BGR so we have to see where the red color is
-        label[np.where((im == [0, 0, 255]).all(axis=2))] = [255]
-        #label=self.convert_np_to_PIL(label)
-        return label
+    # def convert_to_label(self,imgpath):
+    #     im=cv2.imread(imgpath)
+    #
+    #     h,w,d=im.shape
+    #     label=np.zeros((h,w))
+    #     #because it is BGR so we have to see where the red color is
+    #     label[np.where((im == [0, 0, 255]).all(axis=2))] = [255]
+    #     #label=self.convert_np_to_PIL(label)
+    #     return label
 
 
     def __getitem__(self, idx):
         image=self.convert_np_to_PIL(cv2.imread(os.path.join(self.imagespath,self.images[idx])))
-        label=self.convert_to_label(os.path.join(self.labelspath,self.labels[idx]))
+        label=os.path.join(self.labelspath,self.labels[idx])
 
         label=Image.fromarray(np.uint8(label))
         #image=torch.tensor(image)
