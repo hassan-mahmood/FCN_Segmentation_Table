@@ -2,6 +2,7 @@ import argparse
 import os
 import cv2
 import numpy as np
+from tqdm import tqdm
 
 parser=argparse.ArgumentParser()
 parser.add_argument('--datadir',default="labels/",help="Default directory which contains labels")
@@ -18,7 +19,7 @@ buildings_color=args.buildings_color
 if(not os.path.exists(outputdir)):
     os.mkdir(outputdir)
 
-for image in os.listdir(datadir):
+for image in tqdm(os.listdir(datadir)):
 
     imagepath=os.path.join(datadir,image)
     im=cv2.imread(imagepath)
