@@ -36,7 +36,7 @@ class dataset(torch.utils.data.Dataset):
 
     def __getitem__(self, idx):
         image=self.convert_np_to_PIL(cv2.imread(os.path.join(self.imagespath,self.images[idx])))
-        label=os.path.join(self.labelspath,self.labels[idx])
+        label=cv2.imread(os.path.join(self.labelspath,self.labels[idx]))
 
         label=Image.fromarray(np.uint8(label))
         #image=torch.tensor(image)
