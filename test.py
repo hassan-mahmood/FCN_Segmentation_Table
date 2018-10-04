@@ -60,6 +60,11 @@ if __name__=="__main__":
 
         output=net(image)
         output = output.data.max(1)[1].squeeze_(1).squeeze_(0)
+
+        if cuda:
+            label=label.detach()
+            output=output.detach()
+
         label_trues.append(label.numpy())
         label_preds.append(output.numpy())
         tool.labelTopng(output,os.path.join(args.outputdir,str(i_batch)+'.png'))
