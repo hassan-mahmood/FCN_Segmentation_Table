@@ -24,7 +24,7 @@ parser.add_argument('--cuda',default="false",help="Set to true if want to run th
 
 
 #ref: https://github.com/wkentaro/pytorch-fcn/blob/master/torchfcn/trainer.py
-def cross_entropy2d(input, target):
+def cross_entropy2d(input, target,cuda):
 
     log_softmax=nn.LogSoftmax()
     nll_loss=nn.NLLLoss()
@@ -40,12 +40,16 @@ def cross_entropy2d(input, target):
     # target: (n*h*w,)
     mask = target >= 0
     target = target[mask]
-    #target=target.type(torch.cuda.LongTensor)
-    target = target.type(torch.LongTensor)
+    if(cuda):
+        target=target.type(torch.cuda.LongTensor)
+    else:
+        target = target.type(torch.LongTensor)
 
     loss = nll_loss(log_p, target)
-    #loss=loss.type(torch.cuda.FloatTensor)
-    loss = loss.type(torch.FloatTensor)
+    if(cuda):
+        loss=loss.type(torch.cuda.FloatTensor)
+    else:
+        loss = loss.type(torch.FloatTensor)
     # if size_average:
     #     loss = loss.item()/torch.sum(mask).item()
     return loss
