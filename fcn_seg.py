@@ -72,13 +72,13 @@ if __name__=="__main__":
     else:
         starting_epoch=len(os.listdir('weights'))+1
 
-    mytransforms = torchvision.transforms.Compose([torchvision.transforms.Resize((224, 224)), torchvision.transforms.ToTensor()])
+    mytransforms = torchvision.transforms.Compose([torchvision.transforms.Resize((1024, 1024)), torchvision.transforms.ToTensor()])
 
     train_dataset=dataset(args.traindir,mytransforms)
     val_dataset=dataset(args.valdir,mytransforms)
 
     train_dataloader=DataLoader(train_dataset,batch_size=1,shuffle=True,num_workers=2)
-    test_dataloader=DataLoader(val_dataset,batch_size=1,num_workers=2)
+    val_dataloader=DataLoader(val_dataset,batch_size=1,num_workers=2)
 
     #we are just considering buildings and background so 2 classes
     no_of_classes=int(args.classes)
@@ -121,14 +121,14 @@ if __name__=="__main__":
             running_loss+=loss.item()
             optimizer.step()
             iteration_size+=1
-        
+
         print("epoch {}, loss: {}".format(epoch, running_loss / iteration_size))
         torch.save(net, os.path.join('weights', str(epoch) + '.pt'))
 
         print('Validation:\n')
         net.eval()
         label_trues, label_preds = [], []
-        for i_batch,batch in tqdm(enumerate(train_dataloader)):
+        for i_batch,batch in tqdm(enumerate(val_dataloader)):
             image,label=batch
 
             if (cuda):
