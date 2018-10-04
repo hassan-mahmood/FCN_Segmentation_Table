@@ -26,7 +26,7 @@ if __name__=="__main__":
     if(not os.path.exists(args.outputdir)):
         os.mkdir(args.outputdir)
 
-    mytransforms = torchvision.transforms.Compose([torchvision.transforms.Resize((224, 224)), torchvision.transforms.ToTensor()])
+    mytransforms = torchvision.transforms.Compose([torchvision.transforms.Resize((1024, 1024)), torchvision.transforms.ToTensor()])
 
     test_dataset=dataset(args.testdir,mytransforms)
 

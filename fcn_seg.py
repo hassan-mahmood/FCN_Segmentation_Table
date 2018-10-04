@@ -72,7 +72,7 @@ if __name__=="__main__":
     else:
         starting_epoch=len(os.listdir('weights'))+1
 
-    mytransforms = torchvision.transforms.Compose([torchvision.transforms.Resize((1024, 1024)), torchvision.transforms.ToTensor()])
+    mytransforms = torchvision.transforms.Compose([torchvision.transforms.Resize((224, 224)), torchvision.transforms.ToTensor()])
 
     train_dataset=dataset(args.traindir,mytransforms)
     val_dataset=dataset(args.valdir,mytransforms)
@@ -99,7 +99,7 @@ if __name__=="__main__":
         running_loss=0.0
         iteration_size=0
         #setting net/model to training mode
-        net.eval()
+        net.train()
         for i_batch,batch in tqdm(enumerate(train_dataloader)):
             image,label=batch
 
@@ -121,7 +121,7 @@ if __name__=="__main__":
             running_loss+=loss.item()
             optimizer.step()
             iteration_size+=1
-
+        
         print("epoch {}, loss: {}".format(epoch, running_loss / iteration_size))
         torch.save(net, os.path.join('weights', str(epoch) + '.pt'))
 
