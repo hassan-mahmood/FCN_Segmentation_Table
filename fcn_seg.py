@@ -121,6 +121,9 @@ if __name__=="__main__":
             running_loss+=loss.item()
             optimizer.step()
             iteration_size+=1
+            if(iteration_size%100==99):
+                print("epoch {}, loss: {}".format(epoch, running_loss / iteration_size))
+                iteration_size=0
 
         print("epoch {}, loss: {}".format(epoch, running_loss / iteration_size))
         torch.save(net, os.path.join('weights', str(epoch) + '.pt'))
