@@ -142,16 +142,17 @@ if __name__=="__main__":
 
             output=net(image)
             output = output.data.max(1)[1].squeeze_(1).squeeze_(0)
+            if cuda:
+                label = label.cpu()
+                output = output.cpu()
+
             label_trues.append(label.numpy())
             label_preds.append(output.numpy())
 
         metrics = tool.accuracy_score(label_trues, label_preds)
         metrics = np.array(metrics)
         metrics *= 100
-        print('''\
-                    Accuracy: {0}
-                    Accuracy Class: {1}
-                    Mean IU: {2}'''.format(*metrics))
+        print('''\Mean IU: {0}'''.format(*metrics))
 
 
 
