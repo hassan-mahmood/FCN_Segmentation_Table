@@ -62,8 +62,8 @@ if __name__=="__main__":
         output = output.data.max(1)[1].squeeze_(1).squeeze_(0)
 
         if cuda:
-            label=label.detach()
-            output=output.detach()
+            label=label.cpu()
+            output=output.cpu()
 
         label_trues.append(label.numpy())
         label_preds.append(output.numpy())
