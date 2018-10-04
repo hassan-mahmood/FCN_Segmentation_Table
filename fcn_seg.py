@@ -115,7 +115,7 @@ if __name__=="__main__":
             optimizer.zero_grad()
             output=net(image)
 
-            loss=cross_entropy2d(output,label)
+            loss=cross_entropy2d(output,label,cuda)
 
             loss.backward()
             running_loss+=loss.item()
