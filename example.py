@@ -22,8 +22,8 @@ if(__name__=='__main__'):
     filenames=random.sample(all_images,val_data_len)
     print(filenames)
     for f in filenames:
-        #shutil.move(os.path.join(datadir,'images',f),os.path.join(outputdir,'images',f))
-        #shutil.move(os.path.join(datadir,'labels',f),os.path.join(outputdir,'labels',f))
+        shutil.move(os.path.join(datadir,'images',f),os.path.join(outputdir,'images',f))
+        shutil.move(os.path.join(datadir,'labels',f),os.path.join(outputdir,'labels',f))
         pass
 
 

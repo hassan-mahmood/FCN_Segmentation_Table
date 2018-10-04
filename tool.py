@@ -8,7 +8,7 @@ def getPalette():
     http://blog.csdn.net/yhl_leo/article/details/52185581
     '''
     pal = np.array([[0, 0, 0],
-                    [128, 0, 0],
+                    [255, 0, 0],
                     [0, 128, 0],
                     [128, 128, 0],
                     [0, 0, 128],

@@ -42,7 +42,7 @@ class dataset(torch.utils.data.Dataset):
         #image=torch.tensor(image)
         #following rollaxis will convert r g b c to c r g b
 
-        image = self.transforms(image)
+        image=self.transforms(image)
         label=self.transforms(label)
 
         return image,label
