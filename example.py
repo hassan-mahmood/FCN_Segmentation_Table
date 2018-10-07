@@ -24,6 +24,5 @@ if(__name__=='__main__'):
     for f in filenames:
         shutil.move(os.path.join(datadir,'images',f),os.path.join(outputdir,'images',f))
         shutil.move(os.path.join(datadir,'labels',f),os.path.join(outputdir,'labels',f))
-        pass
 
 

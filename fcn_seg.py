@@ -75,9 +75,11 @@ if __name__=="__main__":
     mytransforms = torchvision.transforms.Compose([torchvision.transforms.Resize((1024, 1024)), torchvision.transforms.ToTensor()])
 
     train_dataset=dataset(args.traindir,mytransforms)
+
     val_dataset=dataset(args.valdir,mytransforms)
 
     train_dataloader=DataLoader(train_dataset,batch_size=1,shuffle=True,num_workers=2)
+
     val_dataloader=DataLoader(val_dataset,batch_size=1,num_workers=2)
 
     #we are just considering buildings and background so 2 classes
