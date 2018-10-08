@@ -49,9 +49,7 @@ if __name__=="__main__":
     net.eval()
     for i_batch,batch in tqdm(enumerate(test_dataloader)):
         imgname,image,label=batch
-        print(imgname)
         imgname=imgname[0]
-        print(imgname)
         if(cuda):
             image.cuda()
             label.cuda()
