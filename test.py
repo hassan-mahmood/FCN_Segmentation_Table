@@ -48,7 +48,7 @@ if __name__=="__main__":
 
     net.eval()
     for i_batch,batch in tqdm(enumerate(test_dataloader)):
-        image,label=batch
+        imgname,image,label=batch
         if(cuda):
             image.cuda()
             label.cuda()
@@ -67,7 +67,7 @@ if __name__=="__main__":
 
         label_trues.append(label.numpy())
         label_preds.append(output.numpy())
-        tool.labelTopng(output,os.path.join(args.outputdir,str(i_batch)+'.png'))
+        tool.labelTopng(output,os.path.join(args.outputdir,imgname))
 
 
     metrics = tool.accuracy_score(label_trues, label_preds)

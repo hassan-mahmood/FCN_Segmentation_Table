@@ -103,7 +103,7 @@ if __name__=="__main__":
         #setting net/model to training mode
         net.train()
         for i_batch,batch in tqdm(enumerate(train_dataloader)):
-            image,label=batch
+            _,image,label=batch
 
             if (cuda):
                 image.cuda()
@@ -126,6 +126,7 @@ if __name__=="__main__":
             if(iteration_size%100==99):
                 print("epoch {}, loss: {}".format(epoch, running_loss / iteration_size))
                 iteration_size=0
+                running_loss=0
 
         print("epoch {}, loss: {}".format(epoch, running_loss / iteration_size))
         torch.save(net, os.path.join('weights', str(epoch) + '.pt'))
@@ -134,7 +135,7 @@ if __name__=="__main__":
         net.eval()
         label_trues, label_preds = [], []
         for i_batch,batch in tqdm(enumerate(val_dataloader)):
-            image,label=batch
+            _,image,label=batch
 
             if (cuda):
                 image.cuda()

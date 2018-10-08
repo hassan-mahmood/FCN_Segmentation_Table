@@ -35,7 +35,8 @@ class dataset(torch.utils.data.Dataset):
 
 
     def __getitem__(self, idx):
-        image=self.convert_np_to_PIL(cv2.imread(os.path.join(self.imagespath,self.images[idx])))
+        imgname=self.images[idx]
+        image=self.convert_np_to_PIL(cv2.imread(os.path.join(self.imagespath,imgname)))
         label=cv2.imread(os.path.join(self.labelspath,self.labels[idx]),0)
 
         label=Image.fromarray(np.uint8(label))
@@ -45,7 +46,7 @@ class dataset(torch.utils.data.Dataset):
         image=self.transforms(image)
         label=self.transforms(label)
 
-        return image,label
+        return imgname,image,label
 
 
 
