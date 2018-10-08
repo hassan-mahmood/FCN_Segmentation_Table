@@ -70,7 +70,7 @@ if __name__=="__main__":
     if(not os.path.exists('weights')):
         os.mkdir('weights')
     else:
-        starting_epoch=len(os.listdir('weights'))+1
+        starting_epoch=len(os.listdir('weights'))
 
     mytransforms = torchvision.transforms.Compose([torchvision.transforms.Resize((1024, 1024)), torchvision.transforms.ToTensor()])
 
