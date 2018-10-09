@@ -11,6 +11,9 @@ from tqdm import tqdm
 import torchvision
 import tool
 import torch.functional as F
+from Utils.utils import *
+
+
 
 parser=argparse.ArgumentParser()
 parser.add_argument('--traindir',default="dataset/",help="Default directory which contains images and labels for training")
@@ -20,6 +23,7 @@ parser.add_argument('--lr',default="0.0001",help="learning rate to update the pa
 parser.add_argument('--epochs',default="100",help="number of epochs to train the model to.")
 parser.add_argument('--classes',default="2",help="number of classes to segment")
 parser.add_argument('--cuda',default="false",help="Set to true if want to run the model on GPU")
+parser.add_argument('--batchsize',default="1",help="Batch size for training")
 
 
 
@@ -59,7 +63,7 @@ def cross_entropy2d(input, target,cuda):
 if __name__=="__main__":
 
     args = parser.parse_args()
-
+    batchsize=int(args.batchsize)
     cuda=args.cuda
     if args.cuda.lower() in ('yes', 'true', 't', 'y', '1'):
         cuda=True
@@ -78,9 +82,9 @@ if __name__=="__main__":
 
     val_dataset=dataset(args.valdir,mytransforms)
 
-    train_dataloader=DataLoader(train_dataset,batch_size=1,shuffle=True,num_workers=2)
+    train_dataloader=DataLoader(train_dataset,batch_size=batchsize,shuffle=True,num_workers=2)
 
-    val_dataloader=DataLoader(val_dataset,batch_size=1,num_workers=2)
+    val_dataloader=DataLoader(val_dataset,batch_size=batchsize,num_workers=2)
 
     #we are just considering buildings and background so 2 classes
     no_of_classes=int(args.classes)
@@ -96,7 +100,7 @@ if __name__=="__main__":
     criterion = nn.BCELoss()
     softmax=nn.Softmax()
     epochs=int(args.epochs)
-    print('Starting training')
+    Logger.log('Starting training')
     for epoch in range(starting_epoch,epochs):
         running_loss=0.0
         iteration_size=0
@@ -124,14 +128,14 @@ if __name__=="__main__":
             optimizer.step()
             iteration_size+=1
             if(iteration_size%100==99):
-                print("epoch {}, loss: {}".format(epoch, running_loss / iteration_size))
+                Logger.log("epoch {}, loss: {}".format(epoch, running_loss / iteration_size))
                 iteration_size=0
                 running_loss=0
 
-        print("epoch {}, loss: {}".format(epoch, running_loss / iteration_size))
+        Logger.log("epoch {}, loss: {}".format(epoch, running_loss / iteration_size))
         torch.save(net, os.path.join('weights', str(epoch) + '.pt'))
 
-        print('Validation:\n')
+        Logger.log('Validation:\n')
         net.eval()
         label_trues, label_preds = [], []
         for i_batch,batch in tqdm(enumerate(val_dataloader)):
@@ -158,7 +162,7 @@ if __name__=="__main__":
         metrics = tool.accuracy_score(label_trues, label_preds)
         metrics = np.array(metrics)
         metrics *= 100
-        print('''\
+        Logger.log('''\
                     Accuracy: {0}
                     Accuracy Class: {1}
                     Mean IU: {2}'''.format(*metrics))
