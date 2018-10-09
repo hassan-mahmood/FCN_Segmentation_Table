@@ -128,10 +128,10 @@ if __name__=="__main__":
             running_loss+=loss.item()
             optimizer.step()
             iteration_size+=1
-            if(iteration_size%100==99):
-                Logger.log("epoch {}, loss: {}".format(epoch, running_loss / iteration_size))
-                iteration_size=0
-                running_loss=0
+            # if(iteration_size%100==99):
+            #     Logger.log("epoch {}, loss: {}".format(epoch, running_loss / iteration_size))
+            #     iteration_size=0
+            #     running_loss=0
 
         Logger.log("epoch {}, loss: {}".format(epoch, running_loss / iteration_size))
         torch.save(net, os.path.join(weightsdir, str(epoch) + '.pt'))
