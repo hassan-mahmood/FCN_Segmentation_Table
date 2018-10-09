@@ -24,7 +24,7 @@ parser.add_argument('--epochs',default="100",help="number of epochs to train the
 parser.add_argument('--classes',default="2",help="number of classes to segment")
 parser.add_argument('--cuda',default="false",help="Set to true if want to run the model on GPU")
 parser.add_argument('--batchsize',default="1",help="Batch size for training")
-
+parser.add_argument('--weightsdir',default='weights/',help='Directory where you want to save the weights')
 
 
 #ref: https://github.com/wkentaro/pytorch-fcn/blob/master/torchfcn/trainer.py
@@ -65,16 +65,17 @@ if __name__=="__main__":
     args = parser.parse_args()
     batchsize=int(args.batchsize)
     cuda=args.cuda
+    weightsdir=args.weightsdir
     if args.cuda.lower() in ('yes', 'true', 't', 'y', '1'):
         cuda=True
     else:
         cuda=False
 
     starting_epoch = 0
-    if(not os.path.exists('weights')):
-        os.mkdir('weights')
+    if(not os.path.exists(weightsdir)):
+        os.mkdir(weightsdir)
     else:
-        starting_epoch=len(os.listdir('weights'))
+        starting_epoch=len(os.listdir(weightsdir))
 
     mytransforms = torchvision.transforms.Compose([torchvision.transforms.Resize((1024, 1024)), torchvision.transforms.ToTensor()])
 
@@ -133,7 +134,7 @@ if __name__=="__main__":
                 running_loss=0
 
         Logger.log("epoch {}, loss: {}".format(epoch, running_loss / iteration_size))
-        torch.save(net, os.path.join('weights', str(epoch) + '.pt'))
+        torch.save(net, os.path.join(weightsdir, str(epoch) + '.pt'))
 
         Logger.log('Validation:\n')
         net.eval()
